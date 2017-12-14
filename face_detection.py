@@ -1,10 +1,10 @@
 import cv2
 import sys
 
-faceDet = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-faceDet_two = cv2.CascadeClassifier("haarcascade_frontalface_alt2.xml")
-faceDet_three = cv2.CascadeClassifier("haarcascade_frontalface_alt.xml")
-faceDet_four = cv2.CascadeClassifier("haarcascade_frontalface_alt_tree.xml")
+faceDet = cv2.CascadeClassifier("harr-classifier/haarcascade_frontalface_default.xml")
+faceDet_two = cv2.CascadeClassifier("harr-classifier/haarcascade_frontalface_alt2.xml")
+faceDet_three = cv2.CascadeClassifier("harr-classifier/haarcascade_frontalface_alt.xml")
+faceDet_four = cv2.CascadeClassifier("harr-classifier/haarcascade_frontalface_alt_tree.xml")
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:
