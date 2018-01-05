@@ -3,15 +3,15 @@ import glob
 import random
 import numpy as np
 
-emotions = ["neutral", "anger", "contempt", "disgust", "fear", "happy", "sadness", "surprise"] #Emotion list
+emotions = ["neutral", "anger", "disgust", "happy", "surprise"] #Emotion list
 fishface = cv2.face.FisherFaceRecognizer_create() #Initialize fisher face classifier
 data = {}
 
-def get_files(emotion): #Define function to get file list, randomly shuffle it and split 80/20
+def get_files(emotion): #Define function to get file list, randomly shuffle it and split 95/5
     files = glob.glob("dataset\\%s\\*" %emotion)
     random.shuffle(files)
-    training = files[:int(len(files)*0.8)] #get first 80% of file list
-    prediction = files[-int(len(files)*0.2):] #get last 20% of file list
+    training = files[:int(len(files)*0.95)] #get first 95% of file list
+    prediction = files[-int(len(files)*0.05):] #get last 5% of file list
     return training, prediction
 
 def make_sets():
@@ -36,32 +36,37 @@ def make_sets():
 
     return training_data, training_labels, prediction_data, prediction_labels
 
-def run_recognizer():
+def run_expression_recognizer():
     training_data, training_labels, prediction_data, prediction_labels = make_sets()
    
     print ("training fisher face classifier")
     print ("size of training set is:", len(training_labels), "images")
+    # train base on training_set
     fishface.train(training_data, np.asarray(training_labels))
 
     print ("predicting classification set")
-    cnt = 0
+    index = 0
     correct = 0
     incorrect = 0
     for image in prediction_data:
+        # predict emotion
         pred, conf = fishface.predict(image)
-        if pred == prediction_labels[cnt]:
+        # if predicted emotion equal emotion_labels image has
+        if pred == prediction_labels[index]:
+            # increament prediction correct
             correct += 1
-            cnt += 1
+            index += 1
         else:
             incorrect += 1
-            cnt += 1
+            index += 1
     return ((100*correct)/(correct + incorrect))
 
-#Now run it
-metascore = []
-for i in range(0,5):
-    correct = run_recognizer()
-    print ("got", correct, "percent correct!")
-    metascore.append(correct)
+if __name__ == "__main__":
+    results = []
+    #run 5 times
+    for i in range(0,5):
+        correct = run_expression_recognizer()
+        print ("got", correct, "percent correct!")
+        results.append(correct)
 
-print ("\n\nend score:", np.mean(metascore), "percent correct!")
+    print ("\n\nend performance: ", np.mean(results), " percent correct!")

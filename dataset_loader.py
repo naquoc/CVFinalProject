@@ -1,7 +1,9 @@
 import glob
 from shutil import copyfile
 
+# list of emotions
 emotions = ["neutral", "anger", "contempt", "disgust", "fear", "happy", "sadness", "surprise"]
+
 # return list of all folder in source_emotion
 participants = glob.glob("source_emotion\\*")
 
@@ -12,6 +14,8 @@ for x in participants:
         for files in glob.glob("%s\\*" %sessions):
             current_session = files[20:-30]
             file = open(files, 'r')
+            # read emotion
+            # 0=neutral, 1=anger, 2=contempt, 3=disgust, 4=fear, 5=happy, 6=sadness, 7=surprise
             emotion = int(float(file.readline()))
             #get path for last image in sequence, which contains the emotion
             sourcefile_emotion = glob.glob("source_images\\%s\\%s\\*" %(part, current_session))[-1]
